@@ -96,4 +96,4 @@ else
       exec a:vim_command . ' ' . output
     endif
   endfunction
-end
+endif
