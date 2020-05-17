@@ -64,7 +64,7 @@ function! CreateFozzieFloatingWindow(width, col, row)
   let row = a:row
   let col = a:col
   let width = a:width
-  let height = 15
+  let height = a:row
 
   let opts = {
     \ 'relative': 'editor',
