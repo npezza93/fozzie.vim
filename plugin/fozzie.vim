@@ -13,9 +13,9 @@ if has('nvim')
     endif
 
     let winid = win_getid()
-    let s:float_term_padding_win = FozzieFloatingPaddingWindow(width, a:height, a:height, width)
+    let s:float_term_padding_win = FozzieFloatingPaddingWindow(width, a:height, a:height, 5 / 16)
 
-    call CreateFozzieFloatingWindow(width, width, a:height)
+    call CreateFozzieFloatingWindow(width, 5 / 16, a:height)
 
     call FozzieFileCommand(a:choice_command, a:vim_command, winid, a:fozzie_args)
     autocmd TermClose * ++once :bd! | call nvim_win_close(s:float_term_padding_win, v:true)
