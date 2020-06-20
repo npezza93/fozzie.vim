@@ -9,7 +9,7 @@ if has('nvim')
     if (float2nr(&columns) < 120)
       let width = float2nr(&columns) - 10
     else
-      let width = float2nr(&columns) * 1 / 3
+      let width = float2nr(&columns) * 3 / 8
     endif
 
     let winid = win_getid()
