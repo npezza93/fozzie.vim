@@ -11,12 +11,11 @@ if has('nvim')
     else
       let width = float2nr(&columns) * 3 / 8
     endif
-    let col = float2nr(&columns) * 5 / 16
 
     let winid = win_getid()
-    let s:float_term_padding_win = FozzieFloatingPaddingWindow(width, a:height, a:height, col)
+    let s:float_term_padding_win = FozzieFloatingPaddingWindow(width, a:height)
 
-    call CreateFozzieFloatingWindow(width, col, a:height)
+    call CreateFozzieFloatingWindow(width, a:height)
 
     call FozzieFileCommand(a:choice_command, a:vim_command, winid, a:fozzie_args)
     autocmd TermClose * ++once :bd! | call nvim_win_close(s:float_term_padding_win, v:true)
@@ -48,11 +47,15 @@ if has('nvim')
       endif
   endfunction
 
-  function! FozzieFloatingPaddingWindow(width, height, row, col)
+  function! FozzieFloatingPaddingWindow(width, height)
+    let row = (&lines - (a:height + 2))/2
+    let col = (&columns - (a:width + 4))/2
+
     let opts = {
       \ 'relative': 'editor',
-      \ 'row': a:row - 1,
-      \ 'col': a:col - 2,
+      \ 'anchor': 'NW',
+      \ 'row': row + 1,
+      \ 'col': col + 1,
       \ 'width': a:width + 4,
       \ 'height': a:height + 2,
       \ 'style': 'minimal'
@@ -62,18 +65,17 @@ if has('nvim')
     return nvim_open_win(buf, v:true, opts)
   endfunction
 
-  function! CreateFozzieFloatingWindow(width, col, row)
-    let row = a:row
-    let col = a:col
-    let width = a:width
-    let height = a:row
+  function! CreateFozzieFloatingWindow(width, height)
+    let row = (&lines - a:height)/2
+    let col = (&columns - a:width)/2
 
     let opts = {
       \ 'relative': 'editor',
-      \ 'row': row,
-      \ 'col': col,
-      \ 'width': width,
-      \ 'height': height,
+      \ 'anchor': 'NW',
+      \ 'row': row + 1,
+      \ 'col': col + 1,
+      \ 'width': a:width,
+      \ 'height': a:height,
       \ 'style': 'minimal'
       \ }
 
