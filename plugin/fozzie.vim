@@ -5,15 +5,18 @@ endif
 let g:fozzie_loaded = 1
 
 if has('nvim')
-  function! FozzieCommand(choice_command, vim_command, height, fozzie_args)
+  function! FozzieCommand(choice_command, vim_command, height, fozzie_args, border, background_color, border_color, text_color)
     if (float2nr(&columns) < 120)
       let width = float2nr(&columns) - 10
     else
       let width = float2nr(&columns) * 3 / 8
     endif
 
+    execute 'hi FozziePaddingWindow guibg=' . a:background_color . ' guifg=' . a:border_color
+    execute 'hi FozzieWindow guibg=' . a:background_color . ' guifg=' . a:text_color
+
     let winid = win_getid()
-    let s:float_term_padding_win = FozzieFloatingPaddingWindow(width, a:height)
+    let s:float_term_padding_win = FozzieFloatingPaddingWindow(width, a:height, a:border)
 
     call CreateFozzieFloatingWindow(width, a:height)
 
@@ -47,22 +50,35 @@ if has('nvim')
       endif
   endfunction
 
-  function! FozzieFloatingPaddingWindow(width, height)
-    let row = (&lines - (a:height + 2))/2
-    let col = (&columns - (a:width + 4))/2
+  function! FozzieFloatingPaddingWindow(width, height, border)
+    let width = a:width + 4
+    let height = a:height + 2
+    let row = (&lines - height)/2
+    let col = (&columns - width)/2
 
     let opts = {
       \ 'relative': 'editor',
       \ 'anchor': 'NW',
       \ 'row': row + 1,
       \ 'col': col + 1,
-      \ 'width': a:width + 4,
-      \ 'height': a:height + 2,
+      \ 'width': width,
+      \ 'height': height,
       \ 'style': 'minimal'
     \ }
 
-    let buf = nvim_create_buf(v:false, v:true)
-    return nvim_open_win(buf, v:true, opts)
+    let s:buf = nvim_create_buf(v:false, v:true)
+    if a:border == v:true
+      let top = "╭" . repeat("─", width - 2) . "╮"
+      let mid = "│" . repeat(" ", width - 2) . "│"
+      let bot = "╰" . repeat("─", width - 2) . "╯"
+      let lines = [top] + repeat([mid], height - 2) + [bot]
+      call nvim_buf_set_lines(s:buf, 0, -1, v:true, lines)
+    endif
+
+    let win = nvim_open_win(s:buf, v:true, opts)
+    call setwinvar(win, '&winhl', 'Normal:FozziePaddingWindow')
+
+    return win
   endfunction
 
   function! CreateFozzieFloatingWindow(width, height)
@@ -83,7 +99,7 @@ if has('nvim')
     let win = nvim_open_win(buf, v:true, opts)
 
     "Set Floating Window Highlighting
-    call setwinvar(win, '&winhl', 'Normal:Pmenu')
+    call setwinvar(win, '&winhl', 'Normal:FozzieWindow')
 
     return win
   endfunction
