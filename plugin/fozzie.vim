@@ -12,6 +12,7 @@ if has('nvim')
       let width = float2nr(&columns) * 3 / 8
     endif
 
+    execute 'hi FloatBorder guibg=' . a:background_color . ' guifg=' . a:border_color
     execute 'hi FozziePaddingWindow guibg=' . a:background_color . ' guifg=' . a:border_color
     execute 'hi FozzieWindow guibg=' . a:background_color . ' guifg=' . a:text_color
 
@@ -62,19 +63,12 @@ if has('nvim')
       \ 'row': row + 1,
       \ 'col': col + 1,
       \ 'width': width,
-      \ 'height': height,
+      \ 'height': height - 2,
+      \ 'border': 'rounded',
       \ 'style': 'minimal'
     \ }
 
     let s:buf = nvim_create_buf(v:false, v:true)
-    if a:border == v:true
-      let top = "╭" . repeat("─", width - 2) . "╮"
-      let mid = "│" . repeat(" ", width - 2) . "│"
-      let bot = "╰" . repeat("─", width - 2) . "╯"
-      let lines = [top] + repeat([mid], height - 2) + [bot]
-      call nvim_buf_set_lines(s:buf, 0, -1, v:true, lines)
-    endif
-
     let win = nvim_open_win(s:buf, v:true, opts)
     call setwinvar(win, '&winhl', 'Normal:FozziePaddingWindow')
 
