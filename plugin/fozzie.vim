@@ -33,7 +33,8 @@ if has('nvim')
 
   function! FozzieFileCommand(choice_command, vim_command, winid, fozzie_args)
       let file = tempname()
-      let cmd = split(&shell) + split(&shellcmdflag) + [a:choice_command . ' | fozzie ' . a:fozzie_args . ' > ' . file]
+      let cmd = a:choice_command . ' | fozzie ' . a:fozzie_args . ' > ' . file
+      echom "Fozzie"
       let F = function('s:fozzie_completed', [a:winid, file, a:vim_command])
       call termopen(cmd, {'on_exit': F})
       setlocal nonumber norelativenumber
