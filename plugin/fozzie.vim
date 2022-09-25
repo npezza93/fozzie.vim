@@ -65,7 +65,7 @@ if has('nvim')
       \ 'col': col + 1,
       \ 'width': width,
       \ 'height': height - 2,
-      \ 'border': 'single',
+      \ 'border': 'rounded',
       \ 'style': 'minimal'
     \ }
 
