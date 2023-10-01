@@ -17,14 +17,19 @@ if has('nvim')
     execute 'hi FozzieWindow guibg=' . a:background_color . ' guifg=' . a:text_color
 
     let winid = win_getid()
+    let g:fozzie_opened = 1
     let s:float_term_padding_win = FozzieFloatingPaddingWindow(width, a:height, a:border)
 
     call CreateFozzieFloatingWindow(width, a:height)
 
     let g:defaultlaststatus = &laststatus
     call FozzieFileCommand(a:choice_command, a:vim_command, winid, a:fozzie_args)
-    autocmd TermClose * ++once :bd! | call nvim_win_close(s:float_term_padding_win, v:true)
-    autocmd BufLeave * ++once :bd! | call nvim_win_close(s:float_term_padding_win, v:true)
+    augroup FozzieAutocmdGroup
+      autocmd!
+      autocmd TermClose * ++once :bd! | let g:fozzie_opened = 0 | call nvim_win_close(s:float_term_padding_win, v:true)
+    augroup END
+    autocmd BufLeave * ++once if g:fozzie_opened == 1 | bd! | call nvim_win_close(s:float_term_padding_win, v:true) | endif
+
     setlocal
           \ nobuflisted
           \ bufhidden=hide
