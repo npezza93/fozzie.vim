@@ -21,6 +21,7 @@ if has('nvim')
 
     call CreateFozzieFloatingWindow(width, a:height)
 
+    let g:defaultlaststatus = &laststatus
     call FozzieFileCommand(a:choice_command, a:vim_command, winid, a:fozzie_args)
     autocmd TermClose * ++once :bd! | call nvim_win_close(s:float_term_padding_win, v:true)
     setlocal
@@ -36,12 +37,13 @@ if has('nvim')
       let cmd = a:choice_command . ' | fozzie ' . a:fozzie_args . ' > ' . file
       let F = function('s:fozzie_completed', [a:winid, file, a:vim_command])
       call termopen(cmd, {'on_exit': F})
-      execute 'file' 'Fozzie'
+      set laststatus=0
       setlocal nonumber norelativenumber
       startinsert
   endfunction
 
   function! s:fozzie_completed(winid, filename, action, ...) abort
+      let &laststatus = g:defaultlaststatus
       call win_gotoid(a:winid)
       if filereadable(a:filename)
         let lines = readfile(a:filename)
