@@ -24,6 +24,7 @@ if has('nvim')
     let g:defaultlaststatus = &laststatus
     call FozzieFileCommand(a:choice_command, a:vim_command, winid, a:fozzie_args)
     autocmd TermClose * ++once :bd! | call nvim_win_close(s:float_term_padding_win, v:true)
+    autocmd BufLeave * ++once :bd! | call nvim_win_close(s:float_term_padding_win, v:true)
     setlocal
           \ nobuflisted
           \ bufhidden=hide
