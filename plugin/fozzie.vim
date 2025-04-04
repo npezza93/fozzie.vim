@@ -54,7 +54,7 @@ if has('nvim')
       if filereadable(a:filename)
         let lines = readfile(a:filename)
         if !empty(lines)
-          exe a:action . ' ' . lines[0]
+          exe a:action . ' ' . fnameescape(lines[0])
         endif
         call delete(a:filename)
       endif
