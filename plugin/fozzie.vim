@@ -24,10 +24,6 @@ if has('nvim')
 
     let g:defaultlaststatus = &laststatus
     call FozzieFileCommand(a:choice_command, a:vim_command, winid, a:fozzie_args)
-    augroup FozzieAutocmdGroup
-      autocmd!
-      autocmd TermClose * ++once :bd! | let g:fozzie_opened = 0 | call nvim_win_close(s:float_term_padding_win, v:true)
-    augroup END
     autocmd BufLeave * ++once if g:fozzie_opened == 1 | bd! | call nvim_win_close(s:float_term_padding_win, v:true) | endif
 
     setlocal
